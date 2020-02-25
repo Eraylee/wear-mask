@@ -2,7 +2,7 @@
  * @Author: ERAYLEE
  * @Date: 2020-02-12 10:45:17
  * @LastEditors: ERAYLEE
- * @LastEditTime: 2020-02-22 17:21:04
+ * @LastEditTime: 2020-02-24 21:31:18
  */
 import * as faceapi from "face-api.js";
 import { FaceDetection, WithFaceLandmarks, FaceLandmarks68 } from "face-api.js";
@@ -101,26 +101,40 @@ class Utils {
     const jawLeft = jawOutLine[1];
     // 右脸
     const jawRight = jawOutLine[15];
+    // 左脸右脸之间中心点位置
+    const midPoint = this.getMidPoint(jawRight, jawLeft);
     // 下巴底部
     const jawButtom = jawOutLine[8];
     // 口罩宽度
-    const width = this.getDistance(jawLeft, jawRight);
+    const width = this.getDistance(jawRight, jawLeft);
+    // 口罩高度
+    const height = this.getDistance(midPoint, jawButtom);
     // 偏转弧度
     const angle = this.getFaceAngle(jawButtom, noseTop);
     return {
       left: jawLeft.x,
       top: jawLeft.y,
       width,
+      height,
       angle
     };
   };
   /**
    * 获取两点之间距离
-   * @param a
-   * @param b
+   * @param start
+   * @param end
    */
-  getDistance = (a: Point, b: Point) =>
-    Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  getDistance = (start: Point, end: Point) =>
+    Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2));
+  /***
+   * 获取两点组成线段的中心坐标
+   *    * @param start
+   * @param end
+   */
+  getMidPoint = (start: Point, end: Point) => ({
+    x: (start.x + end.x) / 2,
+    y: (start.y + end.y) / 2
+  });
   /**
    * 获取线段弧度
    * @param start
@@ -134,14 +148,15 @@ class Utils {
    * @param canvas
    * @param options
    */
-  draw = async ({ top, left, width, angle }: fabric.IImageOptions) => {
+  draw = async ({ top, left, width, height, angle }: fabric.IImageOptions) => {
     const src = await faceapi.fetchImage(mask);
-    const scale = (width as number) / src.naturalWidth;
+    const scaleX = (width as number) / src.naturalWidth;
+    const scaleY = (height as number) / src.naturalHeight;
     const img = await new fabric.Image(src, {
       top,
       left,
-      scaleX: scale,
-      scaleY: scale,
+      scaleX,
+      scaleY,
       angle
     });
     this.canvas?.add(img);
