@@ -2,7 +2,7 @@
  * @Author: ERAYLEE
  * @Date: 2020-02-12 10:45:17
  * @LastEditors: ERAYLEE
- * @LastEditTime: 2020-02-24 21:31:18
+ * @LastEditTime: 2020-02-25 12:07:59
  */
 import * as faceapi from "face-api.js";
 import { FaceDetection, WithFaceLandmarks, FaceLandmarks68 } from "face-api.js";
@@ -141,8 +141,8 @@ class Utils {
    * @param end
    */
   getFaceAngle = (start: Point, end: Point) =>
-    (Math.PI / 2 + Math.atan2(end.y - start.y, end.x - start.x)) /
-    (Math.PI / 180);
+    (Math.PI / 2 + Math.atan2(end.y - start.y, end.x - start.x)) *
+    ( 180 / Math.PI);
   /**
    * 开始绘画
    * @param canvas
