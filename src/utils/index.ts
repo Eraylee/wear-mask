@@ -2,7 +2,7 @@
  * @Author: ERAYLEE
  * @Date: 2020-02-12 10:45:17
  * @LastEditors: ERAYLEE
- * @LastEditTime: 2020-02-25 17:29:34
+ * @LastEditTime: 2020-02-25 17:39:24
  */
 import * as faceapi from "face-api.js";
 import { FaceDetection, WithFaceLandmarks, FaceLandmarks68 } from "face-api.js";
@@ -157,7 +157,7 @@ class Utils {
       left,
       scaleX,
       scaleY,
-      // angle
+      angle
     });
     this.canvas?.add(img);
   };

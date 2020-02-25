@@ -1,9 +1,10 @@
 ## 给你的头像戴上口罩
 ![image](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200222171719.png)
+体验地址：[http://project.wear-mask.eraylee.com/](http://project.wear-mask.eraylee.com/)
 ## 前言
-自新冠肺炎肆虐以来，百姓们人心惶惶，口罩一扫而空，一罩难求，出去买口罩，买不到不说还损失一个口罩。想到这里，我决定自己撸一个戴口罩的小页面，给头像戴一个图图吉利。
+在家闲的无聊，想到之前看到有人写过自动添加圣诞帽的小程序，忽然间来了灵感，准备自己写一个戴口罩的小网页。
 ## 基本功能
-上传图片，通过算法记录图片人脸位置，将口罩覆盖到对应的位置，能够微调纠正口罩大小、位置、角度；不能够识别的人脸的图片，口罩自动生成，且需自行调整口罩。
+上传图片，通过算法识别图片人脸位置；如果能够识别出人脸，将口罩覆盖到对应的位置，能够微调纠正口罩大小、位置、角度，如果不能识别，口罩自动生成，且需自行调整口罩。
 ## 如何识别人脸
 首先想到了使用[Tensorflow.js](https://tensorflow.google.cn/js/tutorials)来进行人脸识别，获取人脸坐标点。引用官方介绍：
 > TensorFlow.js 是一个用于使用 JavaScript 进行机器学习开发的库
@@ -134,11 +135,11 @@ canvas.add(img);
 ![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224204613.png)
 
 我们换一个稍微歪一点的脸试试：
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224210208.png)
+![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200225172958.png)
 
 发现问题了吗？我们没有考虑脸部倾斜的情况，人脸一歪，口罩的位置就不对了，我们肯定得把这个问题扼杀在摇篮中！
 继续画辅助线来分析一下~
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224211501.png)
+![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224210208.png)
 
 我们选取鼻子顶部端点与下巴底部端点连成`线l`，此`线l`与y轴的夹角等于人脸的偏转角度，我们用`角α`来表示这个角，那么这个角度怎么求呢？这个就涉及到三角函数了，高中知识忘了的赶紧去复习复习！
 `Math.atan2`方法返回一个数值-π和π代表之间的角θ(x, y)。这是正X轴与点(X, Y)之间的逆时针角度，以弧度表示。我们可以根据`Math.atan2`这个api获取上图`角β`的弧度，我们需要乘`180 / Math.PI`来计算出角度（180度=PI弧度,所以1度 = PI/180），将其角度减去90度就能求得`角α`的角度。
