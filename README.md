@@ -1,5 +1,5 @@
 ## 给你的头像戴上口罩
-![image](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200222171719.png)
+![image](https://github.com/Eraylee/wear-mask/blob/master/screenshot/20200222171719.png?raw=true?raw=true)
 体验地址：[http://project.wear-mask.eraylee.com/](http://project.wear-mask.eraylee.com/)
 ## 前言
 在家闲的无聊，想到之前看到有人写过自动添加圣诞帽的小程序，忽然间来了灵感，准备自己写一个戴口罩的小网页。
@@ -43,7 +43,7 @@ const detection = await faceapi.detectSingleFace(imgInput, new faceapi.TinyFaceD
 ```
 注意：此api是异步的，所以我使用了[await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await "await")将执行转成同步。
 detectSingleFace识别完成之后，若检测到图片中有人脸，则会返回一个对象（没有识别到人脸会返回undefined）。我们打印一下这个对象里面有啥东西：
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224150822.png)
+![](https://github.com/Eraylee/wear-mask/blob/master/screenshot/20200224150822.png?raw=true)
 
 这个对象包含边界框、分值、图片大小等信息，如果需要获取脸部特征点的参数，需要链式调用`withFaceLandmarks`方法。
 ```javascript
@@ -72,10 +72,10 @@ const resized = faceapi.resizeResults(detection, displaySize);
 faceapi.draw.drawFaceLandmarks(canvas, resizedResults)
 ```
 然后你会看的这种效果：
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224154200.png)
+![](https://github.com/Eraylee/wear-mask/blob/master/screenshot/20200224154200.png?raw=true)
 
 我们画一个图来分析一下口罩的大致位置：
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224164643.png)
+![](https://github.com/Eraylee/wear-mask/blob/master/screenshot/20200224164643.png?raw=true)
 
 由于`getJawOutline`获得到的点是从左到右的，我们取第2个点为口罩的起始点，取第二个点到第16个点的距离为口罩的宽度，我们封装一个方法来获取两点之间的距离：
 ```javascript
@@ -100,7 +100,7 @@ const height =  getDistance(  midPoint , jawButtom);
 ```
 ## 添加口罩
 既然口罩的起始点坐标、宽、和高都已经确认了，我们可以根据这些参数画口罩。想象一下ps图层，将上传的原始图片放在底部图层，图片上面覆盖一层canvas标签，将生成的口罩放置到canvas对应的坐标即可（考虑到需要下载功能，在图片上传之后直接放置到canvas上面）。
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224172727.png)
+![](https://github.com/Eraylee/wear-mask/blob/master/screenshot/20200224172727.png?raw=true)
 
 考虑到需要调整口罩大小、位置，原生的canvas不太好完成事件处理，我们可以使用[fabric.js](http://fabricjs.com/ "fabricjs")来完成这些操作，此库天然支持canvas图片的编辑。
 
@@ -132,18 +132,18 @@ const img = await new fabric.Image(imgInput);
 canvas.add(img);
 ```
 来看看成功了没~~
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224204613.png)
+![](https://github.com/Eraylee/wear-mask/blob/master/screenshot/20200224204613.png?raw=true)
 
 我们换一个稍微歪一点的脸试试：
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200225172958.png)
+![](https://github.com/Eraylee/wear-mask/blob/master/screenshot/20200225172958.png?raw=true)
 
 发现问题了吗？我们没有考虑脸部倾斜的情况，人脸一歪，口罩的位置就不对了，我们肯定得把这个问题扼杀在摇篮中！
 继续画辅助线来分析一下~
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200224210208.png)
+![](https://github.com/Eraylee/wear-mask/blob/master/screenshot/20200224210208.png?raw=true)
 
 我们选取鼻子顶部端点与下巴底部端点连成`线l`，此`线l`与y轴的夹角等于人脸的偏转角度，我们用`角α`来表示这个角，那么这个角度怎么求呢？这个就涉及到三角函数了，高中知识忘了的赶紧去复习复习！
 `Math.atan2`方法返回一个数值-π和π代表之间的角θ(x, y)。这是正X轴与点(X, Y)之间的逆时针角度，以弧度表示。我们可以根据`Math.atan2`这个api获取上图`角β`的弧度，我们需要乘`180 / Math.PI`来计算出角度（180度=PI弧度,所以1度 = PI/180），将其角度减去90度就能求得`角α`的角度。
-![](https://media.prod.mdn.mozit.cloud/attachments/2015/09/22/11557/dd6fa5f4dd920f07b1e794c203bcc462/atan2.png)
+![](https://media.prod.mdn.mozit.cloud/attachments/2015/09/22/11557/dd6fa5f4dd920f07b1e794c203bcc462/atan2.png?raw=true)
 
 注意！Math.atan2返回的结果是逆时针的，而canvas里面的旋转是顺时针的！所以我们得将结果取反！取反之后简化一下就可以得出一下方法：
 ```javascript
@@ -151,7 +151,7 @@ getFaceAngle = (start: Point, end: Point) =>
 	(Math.PI / 2 + Math.atan2(end.y - start.y, end.x - start.x)) *( 180 / Math.PI);
 ```
 我们再试一下~
-![](https://raw.githubusercontent.com/Eraylee/wear-mask/master/screenshot/20200225122004.png)
+![](https://github.com/Eraylee/wear-mask/blob/master/screenshot/20200225122004.png?raw=true)
 
 搞定，毫无违和感！
 ## 结尾
