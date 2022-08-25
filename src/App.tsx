@@ -36,6 +36,13 @@ const App = () => {
     if (res) {
       setPicReady(true);
     } else {
+      utils.draw({
+        top: 100,
+        left: 100,
+        width: 100,
+        height: 68,
+        angle: 0,
+      });
       alert("此图片暂时无法解析，请手动调整");
     }
   }, []);
@@ -67,7 +74,7 @@ const App = () => {
           accept="image/*"
           type="file"
           id="uploader"
-          onChange={e => setFiles(e.target.files as FileList)}
+          onChange={(e) => setFiles(e.target.files as FileList)}
         />
         <button
           className="button"

@@ -29,7 +29,7 @@ class Utils {
       await Promise.all([
         // faceapi.nets.ssdMobilenetv1.load("/models"),
         faceapi.nets.tinyFaceDetector.load("/models"),
-        faceapi.nets.faceLandmark68TinyNet.load("/models")
+        faceapi.nets.faceLandmark68TinyNet.load("/models"),
       ]);
       console.log("载入模型成功...");
       return true;
@@ -53,18 +53,12 @@ class Utils {
       .withFaceLandmarks(true);
     const displaySize = {
       width: imgInput.width,
-      height: imgInput.height
+      height: imgInput.height,
     };
     this.canvas?.setWidth(displaySize.width);
     this.canvas?.setHeight(displaySize.height);
 
     if (!detection) {
-      await this.draw({
-        top: 20,
-        left: 20,
-        width: 100,
-        angle: 0
-      });
       return false;
     }
     /**
@@ -80,7 +74,7 @@ class Utils {
       hasControls: false,
       hasBorders: false,
       evented: false,
-      selectable: false
+      selectable: false,
     });
     this.canvas?.add(img);
     await this.draw(options);
@@ -116,7 +110,7 @@ class Utils {
       top: jawLeft.y,
       width,
       height,
-      angle
+      angle,
     };
   };
   /**
@@ -133,7 +127,7 @@ class Utils {
    */
   getMidPoint = (start: Point, end: Point) => ({
     x: (start.x + end.x) / 2,
-    y: (start.y + end.y) / 2
+    y: (start.y + end.y) / 2,
   });
   /**
    * 获取线段弧度
@@ -142,7 +136,7 @@ class Utils {
    */
   getFaceAngle = (start: Point, end: Point) =>
     (Math.PI / 2 + Math.atan2(end.y - start.y, end.x - start.x)) *
-    ( 180 / Math.PI);
+    (180 / Math.PI);
   /**
    * 开始绘画
    * @param canvas
@@ -157,7 +151,7 @@ class Utils {
       left,
       scaleX,
       scaleY,
-      angle
+      angle,
     });
     this.canvas?.add(img);
   };
